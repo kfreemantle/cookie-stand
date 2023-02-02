@@ -2,243 +2,172 @@
 
 // Global variables
 
-let hours = ['0600', '0700', '0800', '0900', '1000', '1100', '1200', '1300', '1400', '1500', '1600', '1700', '1800', '1900', '2000'];
+// Array for store hours, stored as a string.  Second placeholder arrays for hourly totals.
+let hours = ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
+let hourlyTotal = [];
+
+// Creating store location objects for use later.  Deon Curry's example was very helpful.
+let seattleStore = new StoreLocation('Seattle', 23, 65, 6.3);
+let tokyoStore = new StoreLocation('Tokyo', 3, 24, 1.2);
+let dubaiStore = new StoreLocation('Dubai', 11, 38, 3.7);
+let parisStore = new StoreLocation('Paris', 20, 38, 2.3);
+let limaStore = new StoreLocation('Lima', 2, 16, 4.6);
+
+let allStores = [];
+allStores.push (seattleStore, tokyoStore, dubaiStore, parisStore, limaStore);
+
+// Global DOM/constructor functions: to be used later on in constructor objects, kept here for cleanliness.
+
+// Window to the DOM.  
+let salesTable = document.getElementById('salesTable');
+
+// Tabular functions: used to create the main structural table elements.
+const tableFooterElement = document.createElement('tfoot');
+const tableBodyElement = document.createElement('tbody');
+const tableHeadElement = document.createElement('thead');
+
+salesTable.appendChild(tableHeadElement);
+salesTable.appendChild(tableBodyElement);
+salesTable.appendChild(tableFooterElement);
 
 
-let salesContainer = document.getElementById('salesList');
 
-
-// Average sales calculation function goes here.  It's accessible by all store objects, so that store objects only have to muck about with store-related variables.  It feels cleaner.
-
-
-function calculateSalesAverages(avg, min, max){   // we set parameters for average, min and max, since we'll need all those to calculate a average per hour.  The loop runs for the length of the index, starting from 0, counting up by one.
-  let avgSalesEst = [];
-    for (let i = 0; i < hours.length ; i++) {
-      avgSalesEst[i] = Math.floor(avg * (Math.random() * (max - min + 1) + min));   // math.floor rounds down to the nearest whole integer, which is useful for clean estimates of cookie consumption.  This code was copypasta'd from the MDN page, and tbh I'm still not fully grokking it.  For each iteration of this loop, it sets the value of avgSalesEstimate at each index to be the result of the avgSalesEst with min max and avg values plugged in.  Since we're going to use the calculateSalesAverages function inside each object, we're going to make sure to plug in this.minCustomer, this.maxCustomer and this.avgSales as the arguments.
-    }
-    
-    return avgSalesEst;
-}
 
 
 
 // Constructor function StoreLocation.  Builds an object for each store, requiring the name, min/max customer and average sales data provided.
 
 function StoreLocation(name, minCustomer, maxCustomer, avgSales) {
-  this.name = name,
-  this.minCustomer = minCustomer,
-  this.maxCustomer = maxCustomer,
-  this.avgSales = avgSales,
-  this.hourlySalesArray = [],
-  this.avgSalesEst = function(){
-    this.hourlySalesArray = calculateSalesAverages(this.avgSales, this.minCustomer, this.maxCustomer);}
-  this.renderList = function () {
-    this.avgSalesEst();
-    let ul = document.createElement('ul');
-    for (let i = 0; i < hours.length; i++) {
-      let li = document.createElement('li');
-      
-      li.textContent = `${hours[i]}: ${this.hourlySalesArray[i]}`;
-      ul.appendChild(li);
-    }
-    salesContainer.appendChild(ul);
+  this.name = name;
+  this.minCustomer = minCustomer;
+  this.maxCustomer = maxCustomer;
+  this.avgSales = avgSales;
+  this.hourlySalesArray = [];
+  
+  this.sumSale = 0;
+  
+  
+};
+
+// Average sales calculation function goes here.  It's accessible by all store objects, so that store objects only have to muck about with store-related variables.
+function calculateSalesAverages(avg, min, max){   
+  let avgSalesEst = [];
+  for (let i = 0; i < hours.length ; i++) {
+    avgSalesEst[i] = Math.floor(avg * (Math.random() * (max - min + 1) + min));   
+  }
+   
+    return avgSalesEst;
+}
+// Notes on the math methods. math.floor rounds down to the nearest whole integer, which is useful for clean estimates of cookie consumption.  This code was copypasta'd from the MDN page, and tbh I'm still not fully grokking it.  For each iteration of this loop, it sets the value of avgSalesEst at each index to be the result of the avgSalesEst with min max and avg values plugged in.  Since we're going to use the calculateSalesAverages function inside each object, we're going to make sure to plug in this.minCustomer, this.maxCustomer and this.avgSales as the arguments later on.
+// we set parameters for average, min and max, since we'll need all those to calculate a average per hour.  The loop runs for the length of the index, starting from 0, counting up by one.  Moving on...
+
+// StoreLocation Prototype methods, trying to render our data into a HTML table.
+// prototype for rendering table body data, all the sales data from the stores
+
+
+StoreLocation.prototype.avgSalesEst = function(){
+  this.hourlySalesArray = calculateSalesAverages(this.avgSales, this.minCustomer, this.maxCustomer);
+  for (let i = 0; i < this.hourlySalesArray.length; i++) {
+    this.sumSale += this.hourlySalesArray[i];
   }
 };
 
 
-// StoreLocation Prototype methods, trying to render our data into a HTML table
+// this render function generates the HTML table row and data elements for each of our store sales data, and renders them into the table body. 
 
 StoreLocation.prototype.render = function() {
-  const containerElement = document.getElementById('salesList');
-  // this is the window to the DOM.  salesList is the ID tied to the table element.  When we use the createElement function later it's going to append the contents we create only to that element.
-  const tableElement = document.createElement('table');
-  containerElement.appendChild(tableElement);  // this creates the table element inside the salesList id'd section of the document, which is <section> at the time of this writing.
-
-  const tfElement = document.createElement('tfoot');
-  const tdElement = document.createElement('td');
+  this.avgSalesEst();  
   
+  let storeRow = document.createElement('tr');
+  tableBodyElement.appendChild(storeRow);
   
-  // so we now we have a table to write to.  We need to add a header row for the times of day.
-  const trElement = document.createElement('tr');
-  tableElement.appendChild(trElement);
-  
-  // Now that we have a table row for our headers and we want to add header cells to the table row element, we want to add all of our times from the hours array.  So we'll use a loop.
-  
-  for (let i = 0; i < this.hours.length; i++) {
-    const thElement = document.createElement('th');  
-    trElement.appendChild(thElement);
-    thElement.textContent = this.hours[i];
+  let cityStoreCell = document.createElement('td');
+  storeRow.appendChild(cityStoreCell);
+  cityStoreCell.innerText = this.name;
 
+  for (let i = 0; i < hours.length; i++) {
+    let saleData = document.createElement('td');
+    storeRow.appendChild(saleData);
+    saleData.innerText = this.hourlySalesArray[i];
+  }
 
-  } 
-  // hours.unshift('~');  // this is an attempt to nudge the hours over by one in the table.
-
-  // // now we need to add rows and data for each store
+  let storeTotalCell = document.createElement('td');
+  storeRow.appendChild(storeTotalCell);
+  storeTotalCell.innerText = this.sumSale;
 
   
+}
 
 
 
+// these static functions build the table header and table footer.  The header displays labels for the top row, starting with a 'empty' cell and then filling out the rest with the hours array we made earlier.    The table footer row should contain the subtotals for each hour from each store.
+
+function tableHeader () {
+  let headerRow = document.createElement('tr');
+  tableHeadElement.appendChild(headerRow);
+
+  let headerData = document.createElement('th');
+  headerRow.appendChild(headerData);
+  headerData.innerText = 'Sales Data';
+
+  for (let i = 0; i < hours.length; i++) {
+    let hourHeader = document.createElement('th');
+    headerRow.appendChild(hourHeader);
+    hourHeader.innerText = hours[i];
+  }
+
+  let headerTotals = document.createElement('th');
+  headerRow.appendChild(headerTotals);
+  headerTotals.innerText = 'Daily Sales Total';
 
 
 }
 
-let seattle = new StoreLocation(
-  'Seattle',
-  23, 65, 6.3);
 
-  seattle.renderList();
-// // STOREFRONT OBJECTS
+function tableFooter () {
+  let footerRow = document.createElement('tr');
+  tableFooterElement.appendChild(footerRow);
 
+  let footerData =  document.createElement('td');
+  footerRow.appendChild(footerData);
+  footerData.innerText = "Hourly Totals:"
 
-// // Seattle
-
-// let storeSeattle = {
-//   name: 'Seattle',
-//   minCustomer: 23,
-//   maxCustomer: 65,
-//   avgSales: 6.3,
-//   hourlySalesArray: [],
-//   renderList: function () {
-//     this.avgSalesEst();
-//     let ul = document.createElement('ul');
-//     for (let i = 0; i < hours.length; i++) {
-//       let li = document.createElement('li');
-      
-//       li.textContent = `${hours[i]}: ${this.hourlySalesArray[i]}`;
-//       ul.appendChild(li);
-//     }
-//     salesContainer.appendChild(ul);
-//   },
+  let grandTotal = 0;
   
-//   avgSalesEst: function(){
-//     this.hourlySalesArray = calculateSalesAverages(this.avgSales, this.minCustomer, this.maxCustomer);
-//   }
-  
-// }
+  for (let i = 0; i < hours.length; i++) {
+    let hourlySubTotal = 0;
+    for (let j = 0; j < allStores.length; j++) {
+      hourlySubTotal += allStores[j].hourlySalesArray[i];
+      console.log (hourlySubTotal);
+    } 
 
-// console.log(storeSeattle);
-// storeSeattle.renderList();
+    grandTotal += hourlySubTotal;
 
-// // Tokyo
-
-// let storeTokyo = {
-//   name: 'Tokyo',
-//   minCustomer: 2,
-//   maxCustomer: 24,
-//   avgSales: 1.2,
-//   hourlySalesArray: [],
-  
-//   renderList: function () {
-//     this.avgSalesEst();
-//     let ul = document.createElement('ul');
-//     for (let i = 0; i < hours.length; i++) {
-//       let li = document.createElement('li');
-      
-//       li.textContent = `${hours[i]}: ${this.hourlySalesArray[i]}`;
-//       ul.appendChild(li);
-//     }
-//     salesContainer.appendChild(ul);
-//   },
-  
-//   avgSalesEst: function(){
-//     this.hourlySalesArray = calculateSalesAverages(this.avgSales, this.minCustomer, this.maxCustomer);
-//   }
-  
-// }
-
-// console.log(storeTokyo);
-// storeTokyo.renderList();
+    let hourSubTotal = document.createElement('td');
+    footerRow.appendChild(hourSubTotal);
+    hourSubTotal.innerText = hourlySubTotal;
+  }
 
 
-// // Dubai
 
-// let storeDubai = {
-//   name: 'Dubai',
-//   minCustomer: 11,
-//   maxCustomer: 38,
-//   avgSales: 3.7,
-//   hourlySalesArray: [],
-  
-//   renderList: function () {
-//     this.avgSalesEst();
-//     let ul = document.createElement('ul');
-//     for (let i = 0; i < hours.length; i++) {
-//       let li = document.createElement('li');
-      
-//       li.textContent = `${hours[i]}: ${this.hourlySalesArray[i]}`;
-//       ul.appendChild(li);
-//     }
-//     salesContainer.appendChild(ul);
-//   },
-  
-//   avgSalesEst: function(){
-//     this.hourlySalesArray = calculateSalesAverages(this.avgSales, this.minCustomer, this.maxCustomer);
-//   }
-  
-// }
+  let footerTotals = document.createElement('td');
+  footerRow.appendChild(footerTotals);
+  footerTotals.innerText = grandTotal;
 
-// console.log(storeDubai);
-// storeDubai.renderList();
+}
 
 
-// // Paris
-
-// let storeParis = {
-//   name: 'Paris',
-//   minCustomer: 20,
-//   maxCustomer: 38,
-//   avgSales: 2.3,
-//   hourlySalesArray: [],
-  
-//   renderList: function () {
-//     this.avgSalesEst();
-//     let ul = document.createElement('ul');
-//     for (let i = 0; i < hours.length; i++) {
-//       let li = document.createElement('li');
-      
-//       li.textContent = `${hours[i]}: ${this.hourlySalesArray[i]}`;
-//       ul.appendChild(li);
-//     }
-//     salesContainer.appendChild(ul);
-//   },
-  
-//   avgSalesEst: function(){
-//     this.hourlySalesArray = calculateSalesAverages(this.avgSales, this.minCustomer, this.maxCustomer);
-//   }
-  
-// }
-
-// console.log(storeParis);
-// storeParis.renderList();
+// Here we render the tables and the store objects.
 
 
-// // Lima
+tableHeader();
 
-// let storeLima = {
-//   name: 'Lima',
-//   minCustomer: 2,
-//   maxCustomer: 16,
-//   avgSales: 4.6,
-//   hourlySalesArray: [],
-  
-//   renderList: function () {
-//     this.avgSalesEst();
-//     let ul = document.createElement('ul');
-//     for (let i = 0; i < hours.length; i++) {
-//       let li = document.createElement('li');
-      
-//       li.textContent = `${hours[i]}: ${this.hourlySalesArray[i]}`;
-//       ul.appendChild(li);
-//     }
-//     salesContainer.appendChild(ul);
-//   },
-  
-//   avgSalesEst: function(){
-//     this.hourlySalesArray = calculateSalesAverages(this.avgSales, this.minCustomer, this.maxCustomer);
-//   }
-  
-// }
 
-// console.log(storeLima);
-// storeLima.renderList();
+seattleStore.render();
+tokyoStore.render();
+dubaiStore.render();
+parisStore.render();
+limaStore.render();
+
+
+tableFooter();

@@ -4,15 +4,44 @@
 <head>
   <title>Lab 06 - Salmon Cookies - Sales Data</title>
   <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/sales.css">
 </head>
 
 <body>
   <header>
     <h1>Salmon Cookies - Sales Data</h1>
-    <p a href="index.html">Return to Landing Page</p>
+    <a href="index.html"><p>Return to Landing Page</p></a>
   </header>
   <main>
+
+
+    <form id="franchiseForm">
+        <fieldset>
+          <legend>Apply for a franchise</legend>
+
+          <label>Location
+            <input type="text" id="newFranchiseName">
+          </label>
+
+          <label>Est. Min Daily Customers:
+            <input type="number" id="newFranchiseMin">
+          </label>
+
+          <label>Est. Max Daily Customers:
+            <input type="number" id="newFranchiseMax">
+          </label>
+
+          <label>Est. Avg. Cookies Sold Per Customer:
+            <input type="number" id="newFranchiseAvg">
+          </label>
+          
+          <button type="submit">Model New Franchise?</button>
+        </fieldset>
+      </form>
+    </aside>
+
+
+    
     <table id="salesTable">
 
 

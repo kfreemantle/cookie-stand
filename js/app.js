@@ -21,6 +21,7 @@ allStores.push (seattleStore, tokyoStore, dubaiStore, parisStore, limaStore);
 // Window to the DOM.  
 let salesTable = document.getElementById('salesTable');
 
+
 // Tabular functions: used to create the main structural table elements.
 const tableFooterElement = document.createElement('tfoot');
 const tableBodyElement = document.createElement('tbody');
@@ -156,6 +157,74 @@ function tableFooter () {
 
 }
 
+
+
+
+// Franchise opportunities form functions.
+
+
+function updateFooter() {
+  // for removing the tfooter element and reconstructing w/ new franchise.  not functional right now.
+  // salesTable.removeChild(oldFooter);
+  // salesTable.appendChild(tableFooterElement);
+  let footerRow = document.createElement('tr');
+  tableFooterElement.appendChild(footerRow);
+
+  let footerData =  document.createElement('td');
+  footerRow.appendChild(footerData);
+  footerData.innerText = "Hourly Totals:"
+
+  let grandTotal = 0;
+  
+  for (let i = 0; i < hours.length; i++) {
+    let hourlySubTotal = 0;
+    for (let j = 0; j < allStores.length; j++) {
+      hourlySubTotal += allStores[j].hourlySalesArray[i];
+      console.log (hourlySubTotal);
+    } 
+
+    grandTotal += hourlySubTotal;
+
+    let hourSubTotal = document.createElement('td');
+    footerRow.appendChild(hourSubTotal);
+    hourSubTotal.innerText = hourlySubTotal;
+  }
+
+
+
+  let footerTotals = document.createElement('td');
+  footerRow.appendChild(footerTotals);
+  footerTotals.innerText = grandTotal;
+
+}
+
+
+// preventDefault makes it so that if the user doesn't take any action, the default action WONT be taken.
+
+let franchiseForm = document.querySelector('form');
+let handleSubmit = function(event) {
+  event.preventDefault();
+  let newFranchiseName = (event.target.name.value);  // method for capitalizing first letter? refactor later...
+  console.log(newFranchiseName);
+  let newFranchiseMin = parseInt(event.target.minCustomer.value);
+  let newFranchiseMax = parseInt(event.target.maxCustomer.value);
+  let newFranchiseAvg = parseInt(event.target.avgSales.value);
+
+  // this part makes a new instance of our store object, and the new store is then pushed to the allStores array, just like when we made all the existing stores at the top of the page.  Deon and Anthony's examples were very helpful.
+
+  let newProspectiveFranchise = new StoreLocation(newFranchiseName, newFranchiseMin, newFranchiseMax, newFranchiseAvg);
+  allStores.push(newProspectiveFranchise);
+
+  // math that lives in JavaScript land called?
+  newProspectiveFranchise.avgSalesEst();
+  newProspectiveFranchise.calculateSalesAverages();
+  newProspectiveFranchise.avgSales();
+  newProspectiveFranchise.render();
+  updateFooter();
+
+};
+
+franchiseForm.addEventListener('submit', handleSubmit);
 
 // Here we render the tables and the store objects.
 

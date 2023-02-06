@@ -1,0 +1,64 @@
+:root {
+  --primaryColor: #5B8E7D;
+  --secondaryColor: #8CB369;
+  --accentColor: #F4E285;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+}
+body{
+  background-color: #F4A259;
+
+}
+
+h1 {
+  color: var(--primaryColor);
+  font-weight:bolder;
+}
+
+td {
+  font-family: Arial, sans-serif;
+  background-color: var(--accentColor);
+}
+
+th {
+  background-color: var(--primaryColor);
+}
+
+td, th {
+  padding: 1.2rem;
+}
+
+tfoot {
+  background-color: #BC4B51;
+}
+
+
+table {
+  margin: auto;
+  margin-top: 30px;
+  width: 80vw;
+}
+
+
+table, td, th {
+  border: 3px solid black;
+
+}
+thead th {
+  font-weight: bold;
+  background-color: var(--secondaryColor);
+}
+
+
+fieldset {
+  width: 49vw;
+  margin: auto;
+}
+
+fieldset button {
+  background-color: #BC4B51;
+  color: black;
+}
+
+fieldset label {
+  color: darkgreen;
+}

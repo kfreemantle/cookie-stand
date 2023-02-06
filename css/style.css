@@ -1,0 +1,247 @@
+* {
+  box-sizing: border-box;
+  
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+body {
+  margin: auto;  
+  background-color:#5B8E7D
+  }
+
+.background-img-container {
+  background-image: url('/cookie-stand/img/fish-transparent.png');
+  
+}
+.background-img-container img {
+  /* opacity: 0.2; */
+}
+  
+
+header {
+  margin: auto auto 30px auto;
+  background-color: #BC4B51;
+  }
+
+header nav {
+  margin: auto;
+  /* width: 960px; */
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  border: 2px solid black;
+
+}
+
+.nav-salmon-pic {
+  width: 200px;
+  height: auto;
+}
+
+header nav ul {
+  width: 730px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+
+}
+
+header nav ul li {
+  width: 150px;
+  align-items: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  
+}
+
+
+
+main {
+  margin: auto;
+  border: 8px, #5B8E7D;
+  width: 960px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  background-color: #8CB369;
+
+
+}
+
+.flagship-container {
+  width: 480px;
+    
+}
+
+.tophalf-container {
+  width: 960px;
+display: flex; 
+flex-direction: row;
+justify-content: space-between;
+border: 2px solid black;
+
+}
+
+.tophalf-container h1, h2, h3, a {
+  font-family: 'Mochiy Pop One';
+}
+
+.flagship-info {
+  width: 480px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+
+
+
+}
+
+.flagship-img {
+  width: 480px;
+
+}
+
+.store-locations-container {
+  width: 300px;
+  background-color: #5B8E7D;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  padding-right: 20px;
+
+    
+
+}
+
+
+.store-locations-container h3 {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  text-align: right;
+
+  
+}
+
+.store-locations-container h5 {
+  display: flex;
+  align-items: flex-end;
+  text-align: right;
+  justify-content: flex-end;
+
+}
+
+.store-locations-info {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+
+
+}
+
+section {
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+}
+
+.about-us {
+  width: 465px;
+  height: 300px;
+
+}
+
+.mission-header {
+  width: 960px;
+  display: flex;
+  justify-content:space-between;
+
+}
+
+.mailing-list-button {
+  width: 200px;
+  height: 100%;
+  background-color: #F4A259;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid black;
+}
+
+.family-img img {
+  width: 465px;
+
+}
+
+.bottom-half-container {
+  width: 960px;
+  display: flex;
+  justify-content: space-between;
+  border: 2px solid black;
+  flex-wrap: wrap;
+
+  
+
+
+}
+
+section h3 {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: larger;
+  font-weight: 300;
+
+}
+
+section article {
+  width: 450px;
+  height: 261.96px;
+  background-color: #F4E285;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-style: italic;
+  overflow: auto;
+
+}
+
+
+.merch-container {
+  width: 100vw;
+  display: flex;
+  justify-content: space-between;
+
+}
+
+.merch-container img {
+  height: 220px;
+  width: 220px;
+}
+
+section a:link {
+  color: salmon;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: 200;
+  text-decoration: none;
+  text-align: center;
+
+}
+
+footer {
+  margin: auto;
+  background-color: #BC4B51;
+  font-family: 'Mochiy Pop One';
+
+}
+
+footer h4 {
+  font-family: 'Mochiy Pop One';
+  font-size:larger;
+}
+footer div {
+  margin: auto;
+  
+}
